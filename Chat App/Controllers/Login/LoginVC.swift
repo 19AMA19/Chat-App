@@ -24,54 +24,82 @@ class LoginVC: UIViewController {
         return imageView
     }()
     
+    // Add Email Field in Login Screen
     private let emailField: UITextField = {
-        let emailField = UITextField()
-        emailField.autocapitalizationType = .none
-        emailField.autocorrectionType = .no
-        emailField.returnKeyType = .continue
-        emailField.layer.cornerRadius = 8
-        emailField.layer.borderWidth = 1
-        emailField.layer.borderColor = UIColor.lightGray.cgColor
-        emailField.placeholder = "Enter your email"
-        emailField.textAlignment = .center
-        emailField.keyboardType = .emailAddress
-        emailField.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 5, height: 0))
-        emailField.leftViewMode = .always
-        emailField.backgroundColor = .white
-        return emailField
+        let Email = UITextField()
+        Email.autocapitalizationType = .none
+        Email.autocorrectionType = .no
+        Email.returnKeyType = .continue
+        Email.layer.cornerRadius = 8
+        Email.layer.borderWidth = 1
+        Email.layer.borderColor = UIColor.lightGray.cgColor
+        Email.placeholder = "Enter your email"
+        Email.textAlignment = .center
+        Email.keyboardType = .emailAddress
+        Email.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 5, height: 0))
+        Email.leftViewMode = .always
+        Email.backgroundColor = .white
+        return Email
     }()
     
+    // Add Password Field in Login Screen
     private let passwordField: UITextField = {
-        let passwordField = UITextField()
-        passwordField.autocapitalizationType = .none
-        passwordField.autocorrectionType = .no
-        passwordField.returnKeyType = .continue
-        passwordField.layer.cornerRadius = 8
-        passwordField.layer.borderWidth = 1
-        passwordField.layer.borderColor = UIColor.lightGray.cgColor
-        passwordField.placeholder = "Enter your password"
-        passwordField.textAlignment = .center
-        passwordField.keyboardType = .emailAddress
-        passwordField.isSecureTextEntry = true
-        passwordField.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 5, height: 0))
-        passwordField.leftViewMode = .always
-        passwordField.backgroundColor = .white
-        return passwordField
+        let Password = UITextField()
+        Password.autocapitalizationType = .none
+        Password.autocorrectionType = .no
+        Password.returnKeyType = .done
+        Password.layer.cornerRadius = 8
+        Password.layer.borderWidth = 1
+        Password.layer.borderColor = UIColor.lightGray.cgColor
+        Password.placeholder = "Enter your password"
+        Password.textAlignment = .center
+        Password.isSecureTextEntry = true
+        Password.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 5, height: 0))
+        Password.leftViewMode = .always
+        Password.backgroundColor = .white
+        return Password
     }()
+    
+    // Add Button in Login Screen
+    private let btnLogin : UIButton = {
+        let Login = UIButton()
+        Login.setTitle("Log in", for: .normal)
+        Login.setTitleColor(.white, for: .normal)
+        Login.backgroundColor = .link
+        Login.layer.cornerRadius = 8
+        Login.layer.masksToBounds = true
+        Login.titleLabel?.font = .systemFont(ofSize: 20, weight: .bold)
+        return Login
+    }()
+    
+    
+    
+    
+    
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Log in"
-        view.backgroundColor = .gray
+        view.backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         
         // Add button in Right Bar
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Register", style: .done, target: self, action: #selector(didTapRegister))
 
+        // Activite Login button
+        btnLogin.addTarget(self, action: #selector(loginButtonTapped), for: .touchUpInside)
+
+        
+        emailField.delegate = self
+        passwordField.delegate = self
+        
+        
         // Add SubView to be display in Screen
         view.addSubview(scrollView)
         scrollView.addSubview(imageView)
         scrollView.addSubview(emailField)
         scrollView.addSubview(passwordField)
+        scrollView.addSubview(btnLogin)
 
     }
     
@@ -83,12 +111,31 @@ class LoginVC: UIViewController {
         imageView.frame = CGRect(x: (scrollView.width-size)/2, y: 20, width: size, height: size)
         emailField.frame = CGRect(x: 30, y: imageView.buttom + 30, width: scrollView.width-60, height: 40)
         passwordField.frame = CGRect(x: 30, y: emailField.buttom + 10, width: scrollView.width-60, height: 40)
+        btnLogin.frame = CGRect(x: 30, y: passwordField.buttom + 10, width: scrollView.width-60, height: 40)
 
     }
     
+    //--------------------------- check if Email and Password is not Empty (func) --------------------------- //
+    @objc private func loginButtonTapped(){
+        emailField.resignFirstResponder()
+        passwordField.resignFirstResponder()
+        
+        guard let email = emailField.text, let password = passwordField.text,
+              !email.isEmpty, !password.isEmpty, password.count >= 6 else {
+                alertUserLoginError()
+            return
+        }
+    }
+    
+    func alertUserLoginError() {
+        let alert = UIAlertController(title: "Error", message: "Please enter email and password", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Dismiss", style: .cancel, handler: nil))
+        present(alert, animated: true, completion: nil)
+        
+    }
     
 
-    //--------------------------- Add func out of viewDidLoad --------------------------- //
+    //--------------------------- if user tapped Regiser (func) --------------------------- //
 
     @objc private func didTapRegister(){
         let vc = RegisterVC()
@@ -97,4 +144,15 @@ class LoginVC: UIViewController {
         
     }
 
+}
+
+extension LoginVC: UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        if textField == emailField {
+            passwordField.becomeFirstResponder()
+        } else  if textField == passwordField {
+                loginButtonTapped()
+        }
+        return true
+    }
 }
