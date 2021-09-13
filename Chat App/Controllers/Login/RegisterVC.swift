@@ -21,7 +21,10 @@ class RegisterVC: UIViewController {
         let imageView = UIImageView()
         imageView.image = UIImage(systemName: "person")
         imageView.tintColor = .gray
-        imageView.contentMode = .scaleAspectFit
+        imageView.layer.masksToBounds = true
+        imageView.layer.borderWidth = 2
+        imageView.layer.borderColor = UIColor.lightGray.cgColor
+        imageView.contentMode = .scaleAspectFill
         return imageView
     }()
     
@@ -155,6 +158,7 @@ class RegisterVC: UIViewController {
         
         let size = scrollView.width/3
         imageView.frame = CGRect(x: (scrollView.width-size)/2, y: 20, width: size, height: size)
+        imageView.layer.cornerRadius = imageView.width/2.0
         firstName.frame = CGRect(x: 30, y: imageView.buttom + 30, width: scrollView.width-60, height: 40)
         lastname.frame = CGRect(x: 30, y: firstName.buttom + 10, width: scrollView.width-60, height: 40)
         emailField.frame = CGRect(x: 30, y: lastname.buttom + 10, width: scrollView.width-60, height: 40)
@@ -239,14 +243,15 @@ extension RegisterVC : UIImagePickerControllerDelegate, UINavigationControllerDe
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         picker.dismiss(animated: true, completion: nil)
-        print(info)
+        guard let selectImage = info[UIImagePickerController.InfoKey.originalImage] as? UIImage else {
+            return
+        }
+        
+        self.imageView.image = selectImage
     }
     
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         picker.dismiss(animated: true, completion: nil)
     }
-    
-   
-    
     
 }
