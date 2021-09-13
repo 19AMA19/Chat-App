@@ -6,6 +6,8 @@
 //
 
 import UIKit
+import FirebaseAuth
+
 
 class RegisterVC: UIViewController {
 
@@ -181,6 +183,15 @@ class RegisterVC: UIViewController {
         }
     }
     
+    // --------------- Firebase Create new user ------------------//
+    
+    
+    
+    
+    
+    
+    
+    // --------------- Alert user if there is any missing text field ------------------//
     func alertUserRegisterError() {
         let alert = UIAlertController(title: "Error", message: "Please enter all informaion to create new account", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Dismiss", style: .cancel, handler: nil))

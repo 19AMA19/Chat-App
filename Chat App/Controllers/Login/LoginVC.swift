@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import FirebaseAuth
 
 class LoginVC: UIViewController {
 
@@ -126,6 +127,13 @@ class LoginVC: UIViewController {
             return
         }
     }
+    // --------------- Firebase Create new user ------------------//
+
+    
+    
+    
+    
+    // --------------- Alert user if there is any missing text field ------------------//
     
     func alertUserLoginError() {
         let alert = UIAlertController(title: "Error", message: "Please enter email and password", preferredStyle: .alert)
